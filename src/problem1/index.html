@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Problem 1 – solution.ts Viewer</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      body {
+        margin: 0;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        line-height: 1.5;
+        background: #0b0c10;
+        color: #e5e7eb;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        min-height: 100vh;
+      }
+      header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #1f2937;
+        background: #111217;
+        position: sticky;
+        top: 0;
+      }
+      h1 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #f3f4f6;
+      }
+      main {
+        padding: 16px;
+      }
+      pre {
+        margin: 0;
+        padding: 16px;
+        background: #0d1117;
+        border: 1px solid #1f2937;
+        border-radius: 8px;
+        overflow: auto;
+        white-space: pre;
+        tab-size: 2;
+      }
+      code {
+        display: block;
+        color: #e5e7eb;
+      }
+      .error {
+        color: #fecaca;
+        background: #7f1d1d;
+        border-color: #991b1b;
+      }
+
+      .back-to-home-btn {
+        background: transparent;
+        border: none;
+        color: grey;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>src/problem1/solution.ts</h1>
+    </header>
+    <main>
+      <button
+        id="back-to-home"
+        aria-label="Back to home"
+        class="back-to-home-btn"
+        style="margin-bottom: 12px"
+      >
+        ← Back to home
+      </button>
+      <pre><code id="codeblock" aria-label="solution.ts"></code></pre>
+
+      <section style="margin-top: 16px">
+        <h2 style="margin: 0 0 8px 0; font-size: 14px; color: #cbd5e1">
+          Result
+        </h2>
+        <pre
+          id="result"
+          style="
+            margin: 0;
+            padding: 12px;
+            background: #0b1220;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            overflow: auto;
+          "
+        ></pre>
+      </section>
+    </main>
+    <script type="module">
+      import { loadSourceText, runModuleAndCaptureLogs } from "./tsloader.ts";
+
+      function backToHome() {
+        window.location.href = "../index.html";
+      }
+
+      async function loadSolution() {
+        const codeEl = document.getElementById("codeblock");
+        try {
+          const text = await loadSourceText("./solution.ts?raw");
+          codeEl.textContent = text;
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : String(error);
+          codeEl.textContent = `Failed to load solution.ts\n${message}`;
+          codeEl.parentElement?.classList.add("error");
+        }
+      }
+      loadSolution();
+
+      async function showResults() {
+        const resultEl = document.getElementById("result");
+        const back2Home = document.getElementById("back-to-home");
+        back2Home.addEventListener("click", backToHome);
+        const lines = await runModuleAndCaptureLogs("./solution.ts", {
+          mirrorToDevtools: true,
+        });
+        resultEl.textContent = lines.join("\n");
+      }
+      showResults();
+    </script>
+  </body>
+</html>

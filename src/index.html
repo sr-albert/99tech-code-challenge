@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Albert - 99Tech Code Challenge - Modules</title>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Albert - 99Tech Code Challenge</h1> 
+    </header>
+    <main>
+      <section class="grid" id="modules-grid"></section>
+    </main> 
+    <script>
+      const modules = [
+        {
+          id: "problem1",
+          title: "Problem 1",
+          path: "./problem1/index.html",
+          desc: "Solution.ts Viewer",
+        },
+        {
+          id: "problem2",
+          title: "Problem 2",
+          path: "./problem2/index.html",
+          desc: "Interactive implementation and styling.",
+        },
+        {
+          id: "problem3",
+          title: "Problem 3",
+          path: "./problem3/index.html",
+          desc: "Makeup the messy React hook",
+        },
+      ];
+
+      const grid = document.getElementById("modules-grid");
+      modules.forEach((m) => {
+        const a = document.createElement("a");
+        a.className = "card";
+        a.href = m.path;
+        a.innerHTML = "<h3>" + m.title + "</h3><p>" + m.desc + "</p>";
+        grid.appendChild(a);
+      });
+    </script>
+  </body>
+</html>

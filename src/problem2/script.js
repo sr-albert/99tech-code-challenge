@@ -125,7 +125,12 @@ const elements = {
   tokenSearch: document.getElementById("token-search"),
   tokenList: document.getElementById("token-list"),
   exchangeRate: document.getElementById("exchange-rate"),
+  backHomeButton: document.getElementById("back-home-button"),
 };
+
+function backToHome() {
+  window.location.href = "../index.html";
+}
 
 async function init() {
   try {
@@ -269,6 +274,8 @@ function setupEventListeners() {
       closeTokenModal();
     }
   });
+
+  elements.backHomeButton.addEventListener("click", backToHome);
 }
 
 function handleFromAmountChange(e) {

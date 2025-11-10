@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Problem 3 – original.tsx vs refactor.tsx</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      header {
+        padding: 16px 20px;
+        border-bottom: 1px solid #1f2937;
+        background: #111217;
+        position: sticky;
+        top: 0;
+      }
+      main {
+        margin: unset;
+        max-width: 100%;
+      }
+      h1 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #f3f4f6;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      .panel {
+        display: grid;
+        grid-template-rows: auto 1fr !important;
+        min-height: calc(100vh - 120px);
+      }
+      .panel h2 {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: #cbd5e1;
+      }
+      pre {
+        margin: 0;
+        padding: 16px;
+        background: #0d1117;
+        border: 1px solid #1f2937;
+        border-radius: 8px;
+        overflow: auto;
+        white-space: pre;
+        tab-size: 2;
+      }
+      code {
+        display: block;
+        color: #e5e7eb;
+      }
+      .error {
+        color: #fecaca;
+        background: #7f1d1d;
+        border-color: #991b1b;
+      }
+      .filename {
+        display: inline-block;
+        padding: 2px 8px;
+        border: 1px solid #334155;
+        border-radius: 999px;
+        background: #0b1220;
+        color: #cbd5e1;
+        font-size: 12px;
+      }
+
+      .back-to-home-btn {
+        background: transparent;
+        border: none;
+        color: grey;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      } 
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Problem 3: Messy React – Side-by-side</h1>
+    </header>
+    <main>
+      <button
+        id="back-to-home"
+        aria-label="Back to home"
+        class="back-to-home-btn"
+      >
+        ← Back to home
+      </button>
+      <div class="grid">
+        <section class="panel">
+          <h2>
+            <span class="filename">src/problem3/original.tsx</span>
+          </h2>
+          <pre><code id="original" aria-label="original.tsx"></code></pre>
+        </section>
+        <section class="panel">
+          <h2>
+            <span class="filename">src/problem3/refactor.tsx</span>
+          </h2>
+          <pre><code id="refactor" aria-label="refactor.tsx"></code></pre>
+        </section>
+      </div>
+    </main>
+    <script type="module">
+      import { loadSourceText } from "../problem1/tsloader.ts";
+
+      function backToHome() {
+        window.location.href = "../index.html";
+      }
+
+      async function loadSideBySide() {
+        const back2Home = document.getElementById("back-to-home");
+        back2Home.addEventListener("click", backToHome);
+        const originalEl = document.getElementById("original");
+        const refactorEl = document.getElementById("refactor");
+        try {
+          const [originalText, refactorText] = await Promise.all([
+            loadSourceText("./original.tsx?raw"),
+            loadSourceText("./refactor.tsx?raw"),
+          ]);
+          originalEl.textContent = originalText;
+          refactorEl.textContent = refactorText;
+        } catch (error) {
+          const message =
+            error instanceof Error ? error.message : String(error);
+          originalEl.textContent =
+            originalEl.textContent || `Failed to load original.tsx\n${message}`;
+          originalEl.parentElement?.classList.add("error");
+          refactorEl.textContent =
+            refactorEl.textContent || `Failed to load refactor.tsx\n${message}`;
+          refactorEl.parentElement?.classList.add("error");
+        }
+      }
+
+      loadSideBySide();
+    </script>
+  </body>
+</html>
