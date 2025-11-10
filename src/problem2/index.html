@@ -1,27 +1,122 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fancy Form</title>
-
-  <!-- You may add more stuff here -->
-  <link href="style.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Swap - 99Tech</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
-
 <body>
+  <div class="container">
+    <div class="swap-card">
+      <div class="card-header">
+        <h1>Swap</h1>
+        <button class="settings-btn" aria-label="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"></path>
+          </svg>
+        </button>
+      </div>
 
-  <!-- You may reorganise the whole HTML, as long as your form achieves the same effect. -->
-  <form onsubmit="return !1">
-    <h5>Swap</h5>
-    <label for="input-amount">Amount to send</label>
-    <input id="input-amount" />
+      <form id="swap-form" class="swap-form">
+         <div class="currency-input-group">
+          <div class="input-label">You pay</div>
+          <div class="currency-input-wrapper">
+            <div class="currency-selector" id="from-currency-selector">
+              <img class="currency-icon" id="from-icon" src="https://raw.githubusercontent.com/Switcheo/token-icons/main/tokens/SWTH.svg" alt="Currency">
+              <span class="currency-symbol" id="from-symbol">SWTH</span>
+              <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 4.5L6 7.5L9 4.5"/>
+              </svg>
+            </div>
+            <input 
+              type="number" 
+              id="from-amount" 
+              class="amount-input" 
+              placeholder="0.00"
+              min="0"
+              step="0.00000001"
+              autocomplete="off"
+            />
+          </div>
+          <div class="input-footer">
+            <span class="balance-text">Balance: <span id="from-balance">0.00</span></span>
+            <button type="button" class="max-btn" id="from-max-btn">MAX</button>
+          </div>
+          <div class="error-message" id="from-error"></div>
+        </div>
 
-    <label for="output-amount">Amount to receive</label>
-    <input id="output-amount" />
+        <div class="swap-button-container">
+          <button type="button" class="swap-direction-btn" id="swap-direction-btn" aria-label="Swap currencies">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/>
+            </svg>
+          </button>
+        </div>
 
-    <button>CONFIRM SWAP</button>
-  </form>
-  <script src="script.js"></script>
+        <div class="currency-input-group">
+          <div class="input-label">You receive</div>
+          <div class="currency-input-wrapper">
+            <div class="currency-selector" id="to-currency-selector">
+              <img class="currency-icon" id="to-icon" src="https://raw.githubusercontent.com/Switcheo/token-icons/main/tokens/USDC.svg" alt="Currency">
+              <span class="currency-symbol" id="to-symbol">USDC</span>
+              <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 4.5L6 7.5L9 4.5"/>
+              </svg>
+            </div>
+            <input 
+              type="number" 
+              id="to-amount" 
+              class="amount-input" 
+              placeholder="0.00"
+              min="0"
+              step="0.00000001"
+              autocomplete="off"
+              readonly
+            />
+          </div>
+          <div class="input-footer">
+            <span class="balance-text">Balance: <span id="to-balance">0.00</span></span>
+            <span class="exchange-rate" id="exchange-rate"></span>
+          </div>
+          <div class="error-message" id="to-error"></div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="confirm-btn" id="confirm-btn" disabled>
+          <span>Confirm Swap</span>
+        </button>
+
+        <!-- Loading Indicator -->
+        <div class="loading-overlay" id="loading-overlay">
+          <div class="spinner"></div>
+          <p>processing...</p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Currency Selection Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Select a token</h2>
+          <button class="modal-close" id="modal-close" aria-label="Close">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-search">
+          <input type="text" id="token-search" placeholder="Search tokens..." autocomplete="off">
+        </div>
+        <div class="modal-content" id="token-list">
+         </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./script.js"></script>
 </body>
-
 </html>
