@@ -175,8 +175,6 @@ async function fetchTokenPrices() {
     tokenPrices = {};
     availableTokens = [];
 
-    // Tatum API returns an array of rate objects
-    // Note: value is returned as a string from the API
     if (Array.isArray(data)) {
       for (const rateObj of data) {
         if (rateObj && rateObj.symbol && rateObj.value) {
