@@ -72,8 +72,9 @@ export async function runModuleAndCaptureLogs(
       }
     };
 
-    // Let Vite handle TS transpilation on import
-    await import(/* @vite-ignore */ moduleUrl);
+    // Let Vite handle TS/TSX transpilation on import
+    // Vite will automatically transpile .ts and .tsx files
+    await import(moduleUrl);
   } catch (err) {
     captured.push("Failed to execute module");
     captured.push(err instanceof Error ? err.message : String(err));
