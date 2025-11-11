@@ -24,12 +24,35 @@ function stringifyArgs(args: unknown[]): string {
   }
 }
 
+// Pre-load ALL source files as raw text at build time
+// This glob pattern must match all TS/TSX files in your project
+const rawModules = import.meta.glob(
+  ['./**/*.ts', './**/*.tsx', '../**/*.ts', '../**/*.tsx'], 
+  { as: 'raw', eager: true }
+);
+
 export async function loadSourceText(sourceUrl: string): Promise<string> {
-  const res = await fetch(sourceUrl, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error(`HTTP ${res.status} ${res.statusText}`);
+  // Normalize the URL (remove query params and leading ./)
+  const normalizedUrl = sourceUrl.replace(/\?.*$/, '').replace(/^\.\//, '');
+  
+  // Find matching file from pre-loaded modules
+  for (const [key, content] of Object.entries(rawModules)) {
+    // Check if the key ends with our target filename
+    // Handles cases like "./problem1/solution.ts" matching "solution.ts"
+    if (key.endsWith('/' + normalizedUrl) || key.replace(/^\.\//, '') === normalizedUrl) {
+      return content;
+    }
   }
-  return await res.text();
+  
+  throw new Error(
+    `Could not load source text for "${sourceUrl}". ` +
+    `Available files: ${Object.keys(rawModules).join(', ')}`
+  );
+}
+
+// Remove manual registry - Vite handles dynamic imports automatically
+async function importModule(moduleUrl: string): Promise<unknown> {
+  return import(moduleUrl);
 }
 
 export async function runModuleAndCaptureLogs(
@@ -71,10 +94,8 @@ export async function runModuleAndCaptureLogs(
         }
       }
     };
-
-    // Let Vite handle TS/TSX transpilation on import
-    // Vite will automatically transpile .ts and .tsx files
-    await import(moduleUrl);
+ 
+    await importModule(moduleUrl);
   } catch (err) {
     captured.push("Failed to execute module");
     captured.push(err instanceof Error ? err.message : String(err));
@@ -85,5 +106,3 @@ export async function runModuleAndCaptureLogs(
   }
   return captured;
 }
-
-
